@@ -7,24 +7,34 @@ data = file.read()
 file.close()
 
 data = xmltodict.parse(data)
-test=data['itdRequest']['itdDepartureMonitorRequest'] ['itdDepartureList']['itdDeparture']
 
-for c in range(0,2):
-    print(test[c]['@countdown'])
+if type(data['itdRequest']['itdDepartureMonitorRequest']['itdDepartureList']) !=type(None):
+    test=data['itdRequest']['itdDepartureMonitorRequest'] ['itdDepartureList']['itdDeparture']
+
+    for c in range(0,2):
+        print(test[c]['@countdown'])
 #key in a and value == a[key]
 #
 
 
 #def homepage(request):
-file = urllib2.urlopen('http://www.ding.eu/ding2/XML_DM_REQUEST?language=de&itdLPxx_dmRefresh=1&typeInfo_dm=stopID&nameInfo_dm=9001311&deleteAssignedStops_dm=1&useRealtime=1&mode=direct&line=DIN:87013:%20:H')#Koenigsstrassee richtugn Uni
-data = file.read()
-file.close()
+file2 = urllib2.urlopen('http://www.ding.eu/ding2/XML_DM_REQUEST?language=de&itdLPxx_dmRefresh=1&typeInfo_dm=stopID&nameInfo_dm=9001311&deleteAssignedStops_dm=1&useRealtime=1&mode=direct&line=DIN:87013:%20:H')#Koenigsstrassee richtugn Uni
 
-data = xmltodict.parse(data)
-test=data['itdRequest']['itdDepartureMonitorRequest'] ['itdDepartureList']['itdDeparture']
+data2 = file2.read()
+file2.close()
 
-for c in range(0,2):
-    print(test[c]['@countdown'])
+
+data2 = xmltodict.parse(data2)
+
+
+print type(data2['itdRequest']['itdDepartureMonitorRequest']['itdDepartureList'])
+
+if type(data2['itdRequest']['itdDepartureMonitorRequest']['itdDepartureList']) !=type(None):
+    print("is not none")
+    test2=data2['itdRequest']['itdDepartureMonitorRequest'] ['itdDepartureList']['itdDeparture']
+
+    for c in range(0,2):
+        print(test2[c]['@countdown'])
 #key in a and value == a[key]
 #
 

@@ -25,7 +25,7 @@ temperature, weather_symbol=weather_call.weather_now(49.7685,9.9382)
 print(weather_symbol)
 print (temperature)
 
-#temperature="12" #for tests
+temperature="-12" #for tests
 Displays.display_clock(hour,minute,1.0)
 Displays.display_temperature(temperature,weather_symbol,1.0)
 
