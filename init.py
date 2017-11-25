@@ -26,10 +26,11 @@ print(weather_symbol)
 print (temperature)
 
 #temperature="12" #for tests
-Displays.display_clock(hour,minute,temperature,weather_symbol,1.0)
+Displays.display_clock(hour,minute,1.0)
+Displays.display_temperature(temperature,weather_symbol,1.0)
 
-#Displays.display_image('Lama.png',1)
+# Displays.display_image('Lama.png',1)
 
 unicornhathd.show()
-
+#unicornhathd.off()
 
