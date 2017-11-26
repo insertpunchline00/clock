@@ -23,7 +23,7 @@ import unicornhathd
 #colours = [tuple([int(n * 255) for n in colorsys.hsv_to_rgb(x/float(len(lines)), 1.0, 1.0)]) for x in range(len(lines))]
 
 
-def display_clock (hours,minutes,brightness):  #temperature has tobe  string with at least two chars (add whitspace before)| add color coutner which is counted in main
+def display_clock (hours,minutes,brightness,cycle,color_width):  #temperature has tobe  string with at least two chars (add whitspace before)| add color coutner which is counted in main
 
     FONT = ("/home/pi/.fonts/fixed.ttf", 10) #also time font in file
     
@@ -51,9 +51,9 @@ def display_clock (hours,minutes,brightness):  #temperature has tobe  string wit
     #draw.line(((11,0),(11,15)),(0,0,255),1)
 
     #draw.text((-1, 1), hours, (255,255,0), font=font)
-    #draw.text((-1, 9), minutes, (0,255,0), font=font)
-    draw.text((-1, 1), hours, ( random.randint(1, 255), random.randint(1, 255), random.randint(1, 255)), font=font)
-    draw.text((-1, 9), minutes, ( random.randint(1, 255), random.randint(1, 255), random.randint(1, 255)), font=font)
+    #todo change rand int colours
+    draw.text((-1, 0), hours, ( 0, 255, 0), font=font)
+    draw.text((-1, 9), minutes, ( 0,255,0), font=font)
 
 
     for x in range(12):
@@ -65,15 +65,15 @@ def display_clock (hours,minutes,brightness):  #temperature has tobe  string wit
             
 
             if r>0 or g>0 or b>0:
-                print(r,g,b,"true")
-                r, g, b = [int(n * 255) for n in colorsys.hsv_to_rgb((y) / float(16), 1.0, 1.0)]
+                
+                r, g, b = [int(n * 255) for n in colorsys.hsv_to_rgb((y+cycle) / float(color_width), 1.0, 1.0)]
                 
 
             unicornhathd.set_pixel(-x-1, y, r, g, b)
 
 
 
-    unicornhathd.show()
+    #unicornhathd.show()
    
     return
 
@@ -103,17 +103,45 @@ def display_temperature (temperature, weather_symbol,brightness):
     image = Image.new("RGB",(16,max(16, text_height)), (0,0,0))
     draw = ImageDraw.Draw(image)
     draw.fontmode = "1" #turn antialiasing off for pixel fonts
-    singledigit=0
+
+    #temperature colorset
+    #norm color to -10 +30 degree temperature range
+    value=float(30-int(temperature))/40 *0.66
+    if value<0:
+        value=0
+    if value>0.66:
+        value=0.66
+
+    rt, gt, bt = [int(n * 255) for n in colorsys.hsv_to_rgb(value, 1.0, 1.0)]
+    #end temperature colorset
+
+#digit postion corections for different temperature values e.g. -22 or -6
+#standard case is positive two digits
+
+    singledigit=0#correction if just one digit
+    doubleminus=0  #if negative and two digits, places first digit
+    doubleminus2=0 #if negative and two digits, places second digit
+    doubleminus3=0 #if negative and two digits, places minus sign
 
     if temperature [1]==" ":
         singledigit=6
-    
-    draw.text((13, 4+singledigit), temperature[0], (0,255,0), font=font2)  #whitespace trick refine based on stringlength check todo minus sign
-    draw.text((13, 10), temperature[1], (0,255,0), font=font2)
+
+    if temperature [2]!=" ":
+        doubleminus=2
+        doubleminus2=6
+        doubleminus3=1
+
+  
+    draw.text((13-doubleminus, 4+singledigit+doubleminus3), temperature[0], (rt,gt,bt), font=font2)  #whitespace trick refine based on stringlength check todo minus sign
+    draw.text((13, 10-doubleminus2), temperature[1], (rt,gt,bt), font=font2)
+    draw.text((13, 10), temperature[2], (rt,gt,bt), font=font2)
 
     singledigit=0
-
-    for x in range(12,16):
+    doubleminus=0
+    doublemius2=0
+    doubleminus3=0
+    
+    for x in range(11,16):
         for y in range(16):
             pixel = image.getpixel((x, y))
 
@@ -134,7 +162,7 @@ def display_temperature (temperature, weather_symbol,brightness):
         r, g, b = int(pixel[0]),int(pixel[1]),int(pixel[2])           
         unicornhathd.set_pixel(o_x, o_y, r, g, b)
 
-    unicornhathd.show()
+    #unicornhathd.show()
 
     return
 
